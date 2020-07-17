@@ -58,9 +58,21 @@ class ventas{
                                     '$d[3]',
                                     '$fecha')";
             $r=$r + $result=mysqli_query($conexion,$sql);
+            self::descontar($d[0], 1);
         }
 
         return $r;
+    }
+
+    public function descontar($idproducto, $cantidad){
+        $c= new conectar();
+        $conexion=$c->conexion();
+        $sql = "SELECT cantidad from articulos where id_producto='$idproducto'";
+        $result = mysqli_query($conexion, $sql);
+        $cant = mysqli_fetch_row($result)[0];
+        $cantidadNueva = abs($cantidad - $cant);
+        $sql = "UPDATE articulos set cantidad='$cantidadNueva' where id_producto='$idproducto'";
+        mysqli_query($conexion, $sql);
     }
 
     public function creaFolio(){
